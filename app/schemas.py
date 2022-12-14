@@ -19,12 +19,20 @@ class DataWellInput(BaseModel):
     meloration: float = Field(alias="r")
     tempratura: int = Field(alias="q")
 
-class DataWrite(BaseModel):
+class DataWaterWrite(BaseModel):
     station_id: Optional[int]
-    time: str
+    time: datetime
     level: float
     flow: float
     correction: int
+
+
+class DataWellWrite(BaseModel):
+    station_id: Optional[int]
+    time: datetime
+    level: float
+    meloration: float
+    tempratura: float
 
 class StationInfoInput(BaseModel):
     imei: int = Field(alias="i")
@@ -47,9 +55,9 @@ class StationInfoInput(BaseModel):
     sensor_id: str = Field(alias="p16")
     sensor_name: Optional[str] = Field(alias="p17")
 
-class WaterStationInfo(BaseModel):
+class AllStationInfo(BaseModel):
     station_id : Optional[int]
-    time: str
+    time: datetime
     bateriya: float
     signal: float
     tempratura: float
@@ -62,7 +70,7 @@ class WaterStationInfo(BaseModel):
     time4: int
 
 class WaterStationInfoUpdate(BaseModel):
-    time: str
+    time: datetime
     bateriya: int
     signal: float
     tempratura: int
@@ -75,7 +83,7 @@ class WaterStationInfoUpdate(BaseModel):
     time4: str
 
 class WaterStationDataUpdateOut(BaseModel):
-    time: str
+    time: datetime
     level: float
     flow: float
     correction: int
@@ -84,7 +92,7 @@ class WaterStationDataUpdateOut(BaseModel):
         orm_mode = True
 
 class WaterStationInfoOut(BaseModel):
-    time: str
+    time: datetime
     bateriya: float
     signal: float
     tempratura: float
@@ -143,6 +151,46 @@ class WaterStationOut(BaseModel):
     class Config:
         orm_mode = True
 
+class WellStationInfoOut(BaseModel):
+    time: datetime
+    bateriya: float
+    signal: float
+    tempratura: float
+    proshivka: str
+    frivers: str
+    locatsiya: str
+    time1: int
+    time2: int
+    time3: int
+    time4: int
+
+    class Config:
+        orm_mode = True
+
+class WellStationDataUpdateOut(BaseModel):
+    time: datetime
+    level: float
+    meloration: float
+    tempratura: float
+
+    class Config:
+        orm_mode = True
+
+
+class WellStationOut(BaseModel):
+    id: int
+    imei: int
+    name: str
+    balans: Balans
+    region: Region
+    sensor: Sensor
+    district: District
+    well_station_info_update: List[WellStationInfoOut]
+    well_station_data_update: List[WellStationDataUpdateOut]
+    class Config:
+        orm_mode = True
+
+
 class UserOut(BaseModel):
     id: int
     username: str
@@ -181,3 +229,8 @@ class WaterStationCreate(BaseModel):
     lon: float
     telphone_sensor: str
     telphone_balans: str
+
+class VaqtTest(BaseModel):
+    name: str
+    email: str
+    time: datetime

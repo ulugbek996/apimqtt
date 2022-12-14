@@ -1,4 +1,4 @@
-from  sqlalchemy import Column,Table, Integer, String, Float, Boolean, BigInteger, ForeignKey, MetaData, TIMESTAMP
+from  sqlalchemy import Column,Table, Integer, String, Float, Boolean, BigInteger, ForeignKey, MetaData, DateTime
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -45,24 +45,35 @@ class WaterStation(Base):
     water_station_info_update = relationship("WaterStationInfoUpdate")
     water_station_data_update = relationship("WaterStationDataUpdate")
 
-
-
 class WellStation(Base):
     __tablename__ = "well_stations"
     id = Column(Integer, primary_key=True, index=True)
-    region_id = Column(Integer, ForeignKey("regions.id"))
-    balans_id = Column(Integer, ForeignKey("tashkilot.id"))
-    district_id = Column(Integer, ForeignKey("districts.id"))
+    region_id =Column(Integer, ForeignKey(
+        "regions.id", ondelete="CASCADE"), nullable=False)
+    balans_id =Column(Integer, ForeignKey(
+        "tashkilot.id", ondelete="CASCADE"), nullable=False)
+    district_id = Column(Integer, ForeignKey(
+        "districts.id", ondelete="CASCADE"), nullable=False)
     name = Column(String, index=True)
     imei = Column(BigInteger, unique=True, index=True)
     lat = Column(Float)
     lon = Column(Float)
-    sensor_id = Column(Integer, ForeignKey("sensors.id"))
+    sensor_id = Column(Integer, ForeignKey(
+        "sensors.id", ondelete="CASCADE"), nullable=False)
     telphone_sensor = Column(String)
     telphone_balans = Column(String)
     status = Column(Boolean, server_default=text('true'))
     created_at = Column(TIMESTAMP, server_default=text('now()'))
     updated_at = Column(TIMESTAMP, server_default=text('now()'))
+    district = relationship("District")
+    balans = relationship("Balans")
+    region = relationship("Region")
+    sensor = relationship("Sensor")
+    well_station_info_update = relationship("WellStationInfoUpdate")
+    well_station_data_update = relationship("WellStationDataUpdate")
+
+
+
 
 
 
@@ -70,7 +81,7 @@ class WaterStationInfo(Base):
     __tablename__ = "water_station_info"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("water_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     bateriya = Column(Float)
     signal = Column(Float)
     locatsiya = Column(String)
@@ -87,7 +98,7 @@ class WellStationInfo(Base):
     __tablename__ = "well_station_info"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("well_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     bateriya = Column(Float)
     signal = Column(Float)
     locatsiya = Column(String)
@@ -104,7 +115,7 @@ class WaterStationInfoUpdate(Base):
     __tablename__ = "water_station_info_update"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("water_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     bateriya = Column(Float)
     signal = Column(Float)
     locatsiya = Column(String)
@@ -122,7 +133,7 @@ class WellStationInfoUpdate(Base):
     __tablename__ = "well_station_info_update"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("well_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     bateriya = Column(Float)
     signal = Column(Float)
     locatsiya = Column(String)
@@ -140,7 +151,7 @@ class WaterStationDataHour(Base):
     __tablename__ = "water_station_data_hour"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("water_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     level = Column(Float)
     flow = Column(Float)
     correction = Column(Float)
@@ -150,7 +161,7 @@ class WellStationDataHour(Base):
     __tablename__ = "well_station_data_hour"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("well_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     level = Column(Float)
     meloration = Column(Float)
     tempratura = Column(Float)
@@ -160,7 +171,7 @@ class WaterStationDataDay(Base):
     __tablename__ = "water_station_data_day"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("water_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     level = Column(Float)
     flow = Column(Float)
     created_at = Column(TIMESTAMP, server_default=text('now()'))
@@ -169,7 +180,7 @@ class WellStationDataDay(Base):
     __tablename__ = "well_station_data_day"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("well_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     level = Column(Float)
     meloration = Column(Float)
     created_at = Column(TIMESTAMP, server_default=text('now()'))
@@ -178,7 +189,7 @@ class WaterStationDataUpdate(Base):
     __tablename__ = "water_station_data_update"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("water_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     level = Column(Float)
     flow = Column(Float)
     correction = Column(Float)
@@ -189,12 +200,21 @@ class WellStationDataUpdate(Base):
     __tablename__ = "well_station_data_update"
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("well_stations.id"))
-    time = Column(String)
+    time = Column(DateTime)
     level = Column(Float)
     meloration = Column(Float)
     tempratura = Column(Float)
     created_at = Column(TIMESTAMP, server_default=text('now()'))
     updated_at = Column(TIMESTAMP, server_default=text('now()'))
+
+class VaqtTest(Base):
+    __tablename__ = "vaqt_test"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    email = Column(String)
+    time = Column(DateTime)
+    created_at = Column(TIMESTAMP, server_default=text('now()'))
+
 
 
 class Region(Base):
@@ -223,7 +243,8 @@ class UserStation(Base):
     __tablename__ = "user_stations"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    station_list = Column(String)
+    water_station_list = Column(String)
+    well_station_list = Column(String)
     created_at = Column(TIMESTAMP, server_default=text('now()'))
 
 
@@ -251,7 +272,7 @@ WaterStationDataHour1 = Table(
     metadata,
     Column("id", Integer, primary_key=True, index=True),
     Column("station_id", Integer, ForeignKey("water_stations.id")),
-    Column("time", String),
+    Column("time", DateTime),
     Column("level", Float),
     Column("flow", Float),
     Column("correction", Float),
@@ -262,7 +283,7 @@ WaterStationDataUpdate1 = Table(
     metadata,
     Column("id", Integer, primary_key=True, index=True),
     Column("station_id", Integer, ForeignKey("water_stations.id")),
-    Column("time", String),
+    Column("time", DateTime),
     Column("level", Float),
     Column("flow", Float),
     Column("correction", Float),
@@ -275,7 +296,7 @@ WaterStationInfo1 = Table(
     metadata,
     Column("id", Integer, primary_key=True, index=True),
     Column("station_id", Integer, ForeignKey("water_stations.id")),
-    Column("time", String),
+    Column("time", DateTime),
     Column("bateriya", Float),
     Column("signal", Float),
     Column("locatsiya", String),
@@ -294,7 +315,90 @@ WaterStationInfoUpdate1 = Table(
     metadata,
     Column("id", Integer, primary_key=True, index=True),
     Column("station_id", Integer, ForeignKey("water_stations.id")),
-    Column("time", String),
+    Column("time", DateTime),
+    Column("bateriya", Float),
+    Column("signal", Float),
+    Column("locatsiya", String),
+    Column("tempratura", Float),
+    Column("proshivka", String),
+    Column("frivers", String),
+    Column("time1", Integer),
+    Column("time2", Integer),
+    Column("time3", Integer),
+    Column("time4", Integer),
+    Column("created_at", TIMESTAMP, server_default=text('now()')),
+    Column("updated_at", TIMESTAMP, server_default=text('now()'))
+)
+
+WellStation1 = Table(
+    "well_stations",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("region_id", Integer, ForeignKey("regions.id")),
+    Column("balans_id", Integer, ForeignKey("tashkilot.id")),
+    Column("district_id", Integer, ForeignKey("districts.id")),
+    Column("name", String),
+    Column("imei", BigInteger, unique=True, index=True),
+    Column("lat", Float),
+    Column("lon", Float),
+    Column("sensor_id", Integer, ForeignKey("sensors.id")),
+    Column("telphone_sensor", String),
+    Column("telphone_balans", String),
+    Column("status", Boolean, server_default=text('true')),
+    Column("created_at", TIMESTAMP, server_default=text('now()')),
+    Column("updated_at", TIMESTAMP, server_default=text('now()')),
+)
+
+WellStationDataHour1 = Table(
+    "well_station_data_hour",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("station_id", Integer, ForeignKey("well_stations.id")),
+    Column("time", DateTime),
+    Column("level", Float),
+    Column("meloration", Float),
+    Column("tempratura", Float),
+    Column("created_at", TIMESTAMP, server_default=text('now()')),
+)
+
+WellStationDataUpdate1 = Table(
+    "well_station_data_update",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("station_id", Integer, ForeignKey("well_stations.id")),
+    Column("time", DateTime),
+    Column("level", Float),
+    Column("meloration", Float),
+    Column("tempratura", Float),
+    Column("created_at", TIMESTAMP, server_default=text('now()')),
+    Column("updated_at", TIMESTAMP, server_default=text('now()')),
+)
+
+WellStationInfo1 = Table(
+    "well_station_info",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("station_id", Integer, ForeignKey("well_stations.id")),
+    Column("time", DateTime),
+    Column("bateriya", Float),
+    Column("signal", Float),
+    Column("locatsiya", String),
+    Column("tempratura", Float),
+    Column("proshivka", String),
+    Column("frivers", String),
+    Column("time1", Integer),
+    Column("time2", Integer),
+    Column("time3", Integer),
+    Column("time4", Integer),
+    Column("created_at", TIMESTAMP, server_default=text('now()'))
+)
+
+WellStationInfoUpdate1 = Table(
+    "well_station_info_update",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("station_id", Integer, ForeignKey("well_stations.id")),
+    Column("time", DateTime),
     Column("bateriya", Float),
     Column("signal", Float),
     Column("locatsiya", String),
