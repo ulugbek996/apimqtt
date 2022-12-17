@@ -1,13 +1,16 @@
 from fastapi import FastAPI
 from .database import engine
-from . import models
+from . import models, datawell , datawater ,infowell ,infowater
 from .routers  import  mqtt ,tasks ,stationinfo ,user ,auth , station ,data ,info ,datetime
 
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-
-app.include_router(mqtt.router)
+datawell.client.loop_start()
+datawater.client.loop_start()
+infowell.client.loop_start()
+infowater.client.loop_start()
+#app.include_router(mqtt.router)
 app.include_router(tasks.router)
 app.include_router(stationinfo.router)
 app.include_router(user.router)

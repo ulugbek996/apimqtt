@@ -17,7 +17,7 @@ async def shutdown():
 
 
 @router.on_event("startup")
-@repeat_every(seconds=600, raise_exceptions=True)
+@repeat_every(seconds=300, raise_exceptions=True)
 async def task_water():
     data = conn.fastapi.data_water.find()
     for i in data:
@@ -71,7 +71,7 @@ async def task_info_water():
             print(e)
 
 @router.on_event("startup")
-@repeat_every(seconds=4600, raise_exceptions=True)
+@repeat_every(seconds=4000, raise_exceptions=True)
 async def task_info_well():
     info = conn.fastapi.well_info.find()
     for i in info:
@@ -98,7 +98,7 @@ async def task_info_well():
             print(e)
 
 @router.on_event("startup")
-@repeat_every(seconds=5600, raise_exceptions=True)
+@repeat_every(seconds=5000, raise_exceptions=True)
 async def task_well():
     data = conn.fastapi.data_well.find()
     for i in data:
