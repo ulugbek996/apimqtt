@@ -11,7 +11,7 @@ services:
       - mongo
       - postgres
     environment:
-      MONGO_URL: "mongodb://mongo:27018/fastapi"
+      MONGO_URL: "mongodb://mongo:27017/fastapi"
       POSTGRES_URL: "postgresql://postgres:5432/fastapi"
       command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
@@ -21,7 +21,7 @@ services:
     environment:
       MONGO_INITDB_DATABASE: fastapi
     ports:
-      - "27018:27017"
+      - "27017:27017"
 
 
   postgres:
