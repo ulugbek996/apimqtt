@@ -8,7 +8,6 @@ accesslog = "/home/sss/apimqt/gunicorn-access.log"
 errorlog = "/home/sss/apimqt/gunicorn-error.log"
 
 bind = "0.0.0.0:8000"
-
 worker_class = "uvicorn.workers.UvicornWorker"
 workers = multiprocessing.cpu_count () * 2 + 1
 worker_connections = 1024

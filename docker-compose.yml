@@ -1,0 +1,35 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+      - postgres
+    environment:
+      MONGO_URL: "mongodb://mongo:27018/fastapi"
+      POSTGRES_URL: "postgresql://postgres:5432/fastapi"
+      command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: fastapi
+    ports:
+      - "27018:27017"
+
+
+  postgres:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: fastapi
+    ports:
+      - "5432:5432"
