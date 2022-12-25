@@ -14,6 +14,6 @@ def change_str_float(value):
     return float(value)
 
 
-def change_str_tuple(stringtuple):
+def change_str_tuple(stringtuple: object) -> object:
     stringtuple = stringtuple.split(",")
     return tuple(stringtuple)

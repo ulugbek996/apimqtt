@@ -2,7 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 from typing import Optional, List
-
+from redis_om import HashModel
+from . database import redis_db
 
 class DataWaterInput(BaseModel):
     imei: int = Field(alias="i")
@@ -234,3 +235,78 @@ class VaqtTest(BaseModel):
     name: str
     email: str
     time: datetime
+
+
+
+
+
+class Task(HashModel):
+    name: str
+    description: str
+
+    class Meta:
+        database: redis_db
+
+class WaterSorting(HashModel):
+
+    region_id_asc: str
+    region_id_desc: str
+    balans_id_asc: str
+    balans_id_desc: str
+    sensor_id_asc: str
+    sensor_id_desc: str
+    district_id_asc: str
+    district_id_desc: str
+    water_station_info_update_time_asc: str
+    water_station_info_update_time_desc: str
+    water_station_data_update_time_asc: str
+    water_station_data_update_time_desc: str
+    water_station_info_update_signal_asc: str
+    water_station_info_update_signal_desc: str
+    water_station_info_update_bateriya_asc: str
+    water_station_info_update_bateriya_desc: str
+    water_station_info_update_proshivka_asc: str
+    water_station_info_update_proshivka_desc: str
+
+    class Meta:
+        database: redis_db
+class WellSorting(HashModel):
+
+        region_id_asc: str
+        region_id_desc: str
+        balans_id_asc: str
+        balans_id_desc: str
+        sensor_id_asc: str
+        sensor_id_desc: str
+        district_id_asc: str
+        district_id_desc: str
+        well_station_info_update_time_asc: str
+        well_station_info_update_time_desc: str
+        well_station_data_update_time_asc: str
+        well_station_data_update_time_desc: str
+        well_station_info_update_signal_asc: str
+        well_station_info_update_signal_desc: str
+        well_station_info_update_bateriya_asc: str
+        well_station_info_update_bateriya_desc: str
+        well_station_info_update_proshivka_asc: str
+        well_station_info_update_proshivka_desc: str
+
+        class Meta:
+            database: redis_db
+
+class UserAuth(BaseModel):
+    username: str
+    password: str
+
+class StationStatus(BaseModel):
+    station: int
+    info_day: int
+    info_three_day: int
+    info_week: int
+    data_day: int
+    data_three_day: int
+    data_week: int
+    data_month: int
+    data_year: int
+    class Config:
+        orm_mode = True
